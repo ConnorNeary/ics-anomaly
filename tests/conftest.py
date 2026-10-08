@@ -13,8 +13,9 @@ import pytest
 from icsad.config import config_from_dict
 from icsad.data import LoadedData
 
-FEATURES = ['FIT101', 'LIT101', 'P101', 'AIT201']
-OFFSETS = {'FIT101': 1.0, 'LIT101': 250.0, 'P101': 1.0, 'AIT201': 20.0}
+# six tags: enough for the pre-registered top5 aggregation
+FEATURES = ['FIT101', 'LIT101', 'P101', 'AIT201', 'AIT202', 'FIT201']
+OFFSETS = {'FIT101': 1.0, 'LIT101': 250.0, 'P101': 1.0, 'AIT201': 20.0, 'AIT202': 0.8, 'FIT201': 0.6}
 SYN_ATTACKS = [(800, 1100), (2400, 2800), (3500, 3700), (5200, 5600),
                (7000, 7500), (9100, 9400), (10800, 11300)]
 N_NORMAL, N_ATTACK = 43_200, 12_000
@@ -26,6 +27,8 @@ def _signals(t, rng):
         'LIT101': 600 + 120 * np.sin(2 * np.pi * t / 3_000) + rng.normal(0, 2.0, len(t)),
         'P101': np.where(np.sin(2 * np.pi * t / 1_100) > 0, 2.0, 1.0),
         'AIT201': 250 + 6 * np.sin(2 * np.pi * t / 5_000 + 0.5) + rng.normal(0, 0.2, len(t)),
+        'AIT202': 8.5 + 0.3 * np.sin(2 * np.pi * t / 4_200 + 1.3) + rng.normal(0, 0.01, len(t)),
+        'FIT201': 2.2 + 0.2 * np.sin(2 * np.pi * t / 900 + 0.7) + rng.normal(0, 0.02, len(t)),
     })
 
 

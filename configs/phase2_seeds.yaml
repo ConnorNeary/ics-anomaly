@@ -1,0 +1,45 @@
+experiment: phase2-seeds
+description: >
+  Training runs for the Phase 2 pre-registration (prereg/phase2.md):
+  dissertation small models, 10 seeds each, per-feature errors saved.
+  Run only after prereg/phase2.md is committed. The pipeline's automatic
+  evaluation tunes mean-scored tau/w on attack-val, which the
+  pre-registration discloses; the pre-registered outcomes come from
+  scripts/phase2_analysis.py, not from that evaluation.
+
+data:
+  dataset: swat2015
+  dir: data/swat2015
+  features: ks_filtered
+
+train:
+  epochs: 50
+  batch_size: 512
+  patience: 5
+  val_batch_size: null
+
+detection:
+  tuning_metric: range_f1
+  aggregation: mean
+
+runtime:
+  device: auto
+  deterministic: true
+  save_per_feature: true
+
+models:
+  - name: ae
+    params: {enc_dim: 16}
+    seeds: {start: 42, count: 10}
+  - name: cnn
+    params: {history: 30}
+    seeds: {start: 42, count: 10}
+  - name: lstm
+    params: {history: 30, latent_dim: 32, num_layers: 1}
+    seeds: {start: 42, count: 10}
+  # k-means is added in its own commit once the dissertation's selected k is
+  # recorded (prereg DECISION 6). One candidate only, so attack-val labels
+  # cannot influence k:
+  # - name: kmeans
+  #   params: {k_range: [<dissertation k>]}
+  #   seeds: {start: 42, count: 10}
