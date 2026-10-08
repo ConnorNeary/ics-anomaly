@@ -1,0 +1,10 @@
+__pycache__/
+*.egg-info/
+.venv/
+.pytest_cache/
+
+# Data and outputs never go in git: SWaT is licensed from iTrust, and run
+# artifacts are large. The results store records the commit each run used.
+data/
+runs/
+results/

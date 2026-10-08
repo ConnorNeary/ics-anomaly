@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "icsad"
+version = "0.1.0"
+description = "ICS anomaly detection research pipeline (SWaT), extended from an MSc reproduction of Fung et al. (ESORICS 2022)"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy",
+    "pandas",
+    "scikit-learn",
+    "scipy",
+    "torch",
+    "pyyaml",
+    "pyarrow",
+    "openpyxl",
+    "joblib",
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[project.scripts]
+icsad = "icsad.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["slow: trains small models on synthetic data (tens of seconds)"]

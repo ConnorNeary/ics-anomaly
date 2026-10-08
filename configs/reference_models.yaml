@@ -1,0 +1,41 @@
+experiment: reference-models
+description: >
+  The published reference configurations from Fung et al. Table 2, for the
+  GPU desktop. cnn_reference (8 x 32 units, history 200) ran on CPU in the
+  dissertation at ~5x the small CNN's cost with no better result; the 4 x 512
+  LSTM (history 100, ~7.46M parameters) was infeasible on CPU and is the
+  untested half of the paper's Finding 1a.
+
+  Seeds here are a placeholder: the Phase 3 pre-registration sets the real
+  count from a power calculation.
+
+  Note: the dissertation's train_reference_cnn.py fit its scaler on whole
+  training blocks; this pipeline fits on the rows the training windows read
+  (as the small models did), so its cnn_reference numbers can differ slightly.
+
+data:
+  dataset: swat2015
+  dir: data/swat2015
+  features: ks_filtered
+
+train:
+  epochs: 50
+  batch_size: 512
+  patience: 5
+  val_batch_size: 4096      # full-set validation passes don't fit at history 100-200
+
+detection:
+  tuning_metric: range_f1
+  aggregation: mean
+
+runtime:
+  device: auto
+  deterministic: true
+
+models:
+  - name: cnn_reference
+    params: {history: 200, units: 32, layers: 8, kernel: 3}
+    seeds: {start: 42, count: 3}
+  - name: lstm
+    params: {history: 100, latent_dim: 512, num_layers: 4, dropout: 0.5}
+    seeds: {start: 42, count: 3}
